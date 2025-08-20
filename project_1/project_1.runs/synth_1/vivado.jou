@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:35 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Wed Aug 20 11:22:35 2025
+# Process ID: 12997
+# Current directory: /home/simon/Desktop/S/Arqui/project_1/project_1.runs/synth_1
+# Command line: vivado -log multi_compuerta.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source multi_compuerta.tcl
+# Log file: /home/simon/Desktop/S/Arqui/project_1/project_1.runs/synth_1/multi_compuerta.vds
+# Journal file: /home/simon/Desktop/S/Arqui/project_1/project_1.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source multi_compuerta.tcl -notrace
