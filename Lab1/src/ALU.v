@@ -1,0 +1,35 @@
+`define ADD 6'b100000
+`define SUB 6'b100010
+`define AND 6'b100100
+`define OR  6'b100101
+`define XOR 6'b100110
+`define NOR 6'b100111
+`define SRA 6'b000011
+`define SRL 6'b000010
+
+module ALU #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
+    input wire [DATA_WIDTH-1:0] A,
+    input wire [DATA_WIDTH-1:0] B,
+    input reg [OP_WIDTH-1:0] operation,
+    output reg [DATA_WIDTH-1:0] result,
+    output reg zero, overflow
+);
+
+    always @(*) begin
+        case (operation)
+            `ADD: result = A + B;
+            `SUB: result = A - B;
+            `AND: result = A & B;
+            `OR:  result = A | B;
+            `XOR: result = A ^ B;
+            `NOR: result = ~(A | B);
+            `SRA: result = A >>> 1;
+            `SRL: result = A >> 1;
+            default: result = 0;
+        endcase
+
+        zero = (result == 0);
+        overflow = (A[DATA_WIDTH-1] == B[DATA_WIDTH-1]) && (result[DATA_WIDTH-1] != A[DATA_WIDTH-1]);
+    end
+
+endmodule
