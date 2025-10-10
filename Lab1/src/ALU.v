@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 `define ADD 6'b100000
 `define SUB 6'b100010
 `define AND 6'b100100
@@ -10,7 +12,7 @@
 module ALU #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
     input wire [DATA_WIDTH-1:0] A,
     input wire [DATA_WIDTH-1:0] B,
-    input reg [OP_WIDTH-1:0] operation,
+    input wire [OP_WIDTH-1:0] operation,
     output reg [DATA_WIDTH-1:0] result,
     output reg zero, overflow
 );
@@ -23,9 +25,9 @@ module ALU #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
             `OR:  result = A | B;
             `XOR: result = A ^ B;
             `NOR: result = ~(A | B);
-            `SRA: result = A >>> 1;
-            `SRL: result = A >> 1;
-            default: result = 0;
+            `SRA: result = A >>> B;
+            `SRL: result = A >> B;
+            default: result = {DATA_WIDTH{1'b0}};
         endcase
 
         zero = (result == 0);
