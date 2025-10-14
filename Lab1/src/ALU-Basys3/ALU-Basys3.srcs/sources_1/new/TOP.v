@@ -1,24 +1,20 @@
 `timescale 1ns / 1ps
 
 module TOP #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
-    input wire clk, reset, select,
+    input wire clk, reset,
+    input wire select_a, select_b, select_op,
     input wire [DATA_WIDTH-1:0] IN_DATA,
-    output wire [DATA_WIDTH-1:0] OUT_DATA,
-    output wire zero, overflow
+    output wire [DATA_WIDTH-1:0] OUT_DATA
 );
 
-    wire [DATA_WIDTH-1:0] REG_A, REG_B, REG_OP;
-
-    // Inicializacion de salidas
-    assign result = {DATA_WIDTH{1'b0}};
-    assign zero = 1'b0;
-    assign overflow = 1'b0;
-
+    wire [DATA_WIDTH-1:0] REG_A, REG_B;
+    wire [OP_WIDTH-1:0] REG_OP;
+    
     // Registros Intermedios
     REG #(DATA_WIDTH) reg_a (
         .clk(clk),
         .reset(reset),
-        .select(select),
+        .select(select_a),
         .IN(IN_DATA),
         .OUT(REG_A)
     );
@@ -26,7 +22,7 @@ module TOP #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
     REG #(DATA_WIDTH) reg_b (
         .clk(clk),
         .reset(reset),
-        .select(select),
+        .select(select_b),
         .IN(IN_DATA),
         .OUT(REG_B)
     );
@@ -34,19 +30,17 @@ module TOP #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
     REG #(OP_WIDTH) reg_op (
         .clk(clk),
         .reset(reset),
-        .select(select),
+        .select(select_op),
         .IN(IN_DATA[OP_WIDTH-1:0]),
         .OUT(REG_OP)
     );
 
     // ALU
-    ALU #(DATA_WIDTH, OP_WIDTH) alu (
+    ALU #(DATA_WIDTH, OP_WIDTH) alu_a (
         .A(REG_A),
         .B(REG_B),
         .operation(REG_OP),
-        .result(OUT_DATA),
-        .zero(zero),
-        .overflow(overflow)
+        .result(OUT_DATA)
     );
 
 endmodule

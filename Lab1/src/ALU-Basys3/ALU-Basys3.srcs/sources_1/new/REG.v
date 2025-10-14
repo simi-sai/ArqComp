@@ -9,7 +9,7 @@ module REG #(parameter DATA_WIDTH = 8) (
     always @(posedge clk) begin
         if (reset) begin
             OUT <= {DATA_WIDTH{1'b0}};
-        end 
+        end
         else if(select) begin
             OUT <= IN;
         end
