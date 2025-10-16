@@ -37,7 +37,7 @@ La ALU debe implementar las siguientes operaciones:
 
 ## Desarrollo
 
-### Implementacion de la ALU
+### Implementacion de la ALU ([`ALU.v`](src\ALU-Basys3\ALU-Basys3.srcs\sources_1\new\ALU.v))
 
 Una ALU es un componente fundamental en los sistemas digitales que realiza operaciones aritméticas y lógicas en datos binarios. La implementación de una ALU en FPGA permite una gran flexibilidad y personalización en el diseño de sistemas digitales.
 
@@ -131,7 +131,7 @@ Luego de realizar la implementacion de la ALU, se puede observar el siguiente es
 >[!NOTE]
 >El esquema presentado es una representación simplificada y visual de la ALU, el cual no refleja realmente su implementacion interna, si observamos el esquema sintetizado real este muestra combinaciones de bloques LUTs y CARRY, que es la forma en que se implementan las operaciones aritméticas y lógicas en FPGAs.
 
-### Registros Intermedios
+### Registros Intermedios ([`REG.v`](src\ALU-Basys3\ALU-Basys3.srcs\sources_1\new\REG.v))
 
 Para implementar la logica previa al ingreso de datos a la ALU, se utilizan registros intermedios que almacenan temporalmente los datos de entrada ingresados (por medio de los switches) actuando como buffers. Estos registros permiten que los datos sean procesados de manera eficiente y sincrónica, asegurando que la ALU reciba los valores correctos en el momento adecuado.
 
@@ -164,7 +164,7 @@ endmodule
     <img src="images/implementacion_registros.png" alt="Esquema de Registro Intermedio" width="600"/>
 </div>
 
-### Modulo Superior
+### Modulo Superior ([`TOP.v`](src\ALU-Basys3\ALU-Basys3.srcs\sources_1\new\TOP.v))
 
 El modulo superior (`TOP.v`) integra la ALU y los registros intermedios, gestionando la interaccion con los switches, botones de la FPGA y salida a LEDs. Este modulo se encarga de instanciar el resto de los modulos, coordinar la carga de datos en los registros, la seleccion de operaciones y la visualizacion de resultados.
 
@@ -227,7 +227,7 @@ endmodule
     <img src="images/implementacion_completa.png" alt="Esquema de Modulo Superior" width="600"/>
 </div>
 
-### Constraints
+### Constraints ([`Basys-3-Master.xdc`](src\ALU-Basys3\ALU-Basys3.srcs\constrs_1\new\Basys-3-Master.xdc))
 
 El archivo de constraints (`.xdc`) define las conexiones entre los pines de la FPGA y los componentes externos, como switches, botones y LEDs. Asegurando que las señales de entrada y salida estén correctamente mapeadas para el funcionamiento del diseño.
 
