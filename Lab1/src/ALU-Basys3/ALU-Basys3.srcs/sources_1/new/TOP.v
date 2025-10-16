@@ -1,10 +1,12 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module TOP #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
     input wire clk, reset,
     input wire select_a, select_b, select_op,
     input wire [DATA_WIDTH-1:0] IN_DATA,
-    output wire [DATA_WIDTH-1:0] OUT_DATA
+    output wire [DATA_WIDTH-1:0] OUT_DATA,
+    output wire zero, overflow, negative
 );
 
     wire [DATA_WIDTH-1:0] REG_A, REG_B;
@@ -39,8 +41,11 @@ module TOP #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
     ALU #(DATA_WIDTH, OP_WIDTH) alu_a (
         .A(REG_A),
         .B(REG_B),
-        .operation(REG_OP),
-        .result(OUT_DATA)
+        .OP(REG_OP),
+        .result(OUT_DATA),
+        .zero(zero),
+        .overflow(overflow),
+        .negative(negative)
     );
 
 endmodule

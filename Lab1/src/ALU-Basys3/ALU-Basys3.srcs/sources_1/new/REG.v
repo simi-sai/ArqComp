@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 module REG #(parameter DATA_WIDTH = 8) (
     input wire clk, reset, select,
