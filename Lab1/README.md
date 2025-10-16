@@ -32,7 +32,7 @@ La ALU debe implementar las siguientes operaciones:
 ### Schematics
 
 <div align="center">
-  <img src="images/alu_schematic.png" alt="ALU Schematic" width="600"/>
+    <img src="images/alu_schematic.png" alt="ALU Schematic" width="600"/>
 </div>
 
 ## Desarrollo
@@ -125,7 +125,7 @@ reg [DATA_WIDTH:0] aux_result; // Bit extra para detectar overflow
 Luego de realizar la implementacion de la ALU, se puede observar el siguiente esquema del circuito sintetizado:
 
 <div align="center">
-  <img src="images/implementacion_alu.png" alt="Esquema de ALU Sintetizada" width="600"/>
+    <img src="images/implementacion_alu.png" alt="Esquema de ALU Sintetizada" width="600"/>
 </div>
 
 >[!NOTE]
@@ -135,7 +135,7 @@ Luego de realizar la implementacion de la ALU, se puede observar el siguiente es
 
 Para implementar la logica previa al ingreso de datos a la ALU, se utilizan registros intermedios que almacenan temporalmente los datos de entrada ingresados (por medio de los switches) actuando como buffers. Estos registros permiten que los datos sean procesados de manera eficiente y sincrónica, asegurando que la ALU reciba los valores correctos en el momento adecuado.
 
-Para la carga y limpieza de estos registros, se utilizan botones que actúan como señales de control. Contamos con un boton para cada registro (`select_a`, `select_c` y `select_op`). Los mismos se encuentran conectados al modulo superior (`top_module.v`) y permiten cargar los datos desde los switches a los registros intermedios o limpiar su contenido.
+Para la carga y limpieza de estos registros, se utilizan botones que actúan como señales de control. Contamos con un boton para cada registro (`select_a`, `select_c` y `select_op`) y un boton de reset (`reset`). Los mismos se encuentran dentro del modulo superior (`TOP.v`) y permiten cargar los datos desde los switches a los registros intermedios o limpiar su contenido.
 
 **Implementacion de Registros Intermedios:**
 
@@ -161,12 +161,12 @@ endmodule
 **Schematics de Registros Intermedios:**
 
 <div align="center">
-  <img src="images/implementacion_registros.png" alt="Esquema de Registro Intermedio" width="600"/>
+    <img src="images/implementacion_registros.png" alt="Esquema de Registro Intermedio" width="600"/>
 </div>
 
 ### Modulo Superior
 
-El modulo superior (`top_module.v`) integra la ALU y los registros intermedios, gestionando la interaccion con los switches, botones del FPGA y salida a LEDs. Este modulo se encarga de instanciar el resto de los modulos, coordinar la carga de datos en los registros, la seleccion de operaciones y la visualizacion de resultados.
+El modulo superior (`TOP.v`) integra la ALU y los registros intermedios, gestionando la interaccion con los switches, botones de la FPGA y salida a LEDs. Este modulo se encarga de instanciar el resto de los modulos, coordinar la carga de datos en los registros, la seleccion de operaciones y la visualizacion de resultados.
 
 **Implementacion del Modulo Superior:**
 
@@ -224,13 +224,76 @@ endmodule
 **Schematics del Modulo Superior:**
 
 <div align="center">
-  <img src="images/implementacion_completa.png" alt="Esquema de Modulo Superior" width="600"/>
+    <img src="images/implementacion_completa.png" alt="Esquema de Modulo Superior" width="600"/>
 </div>
 
 ### Constraints
 
->[!NOTE]
->Completar
+El archivo de constraints (`.xdc`) define las conexiones entre los pines de la FPGA y los componentes externos, como switches, botones y LEDs. Asegurando que las señales de entrada y salida estén correctamente mapeadas para el funcionamiento del diseño.
+
+**Distribucion de Placa Basys 3:**
+
+<div align="center">
+    <img src="images/basys3-front.jpg" alt="Distribucion de Placa Basys 3" width="500"/>
+</div>
+
+Partiendo del archivo base proporcionado por Diligent, se realizaron unas modificaciones para adaptar las conexiones a los requerimientos del proyecto.
+
+**Archivo de Constraints Modificado:**
+
+```TCL
+## Clock signal
+set_property -dict { PACKAGE_PIN W5   IOSTANDARD LVCMOS33 } [get_ports clk]
+create_clock -add -name sys_clk_pin -period 10.000 -waveform {0 5} [get_ports clk]
+
+## Switches
+set_property -dict { PACKAGE_PIN V17   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[0]}]
+set_property -dict { PACKAGE_PIN V16   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[1]}]
+set_property -dict { PACKAGE_PIN W16   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[2]}]
+set_property -dict { PACKAGE_PIN W17   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[3]}]
+set_property -dict { PACKAGE_PIN W15   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[4]}]
+set_property -dict { PACKAGE_PIN V15   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[5]}]
+set_property -dict { PACKAGE_PIN W14   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[6]}]
+set_property -dict { PACKAGE_PIN W13   IOSTANDARD LVCMOS33 } [get_ports {IN_DATA[7]}]
+
+## LEDs
+set_property -dict { PACKAGE_PIN U16   IOSTANDARD LVCMOS33 } [get_ports {OUT_DATA[0]}]
+set_property -dict { PACKAGE_PIN E19   IOSTANDARD LVCMOS33 } [get_ports {OUT_DATA[1]}]
+set_property -dict { PACKAGE_PIN U19   IOSTANDARD LVCMOS33 } [get_ports {OUT_DATA[2]}]
+set_property -dict { PACKAGE_PIN V19   IOSTANDARD LVCMOS33 } [get_ports {OUT_DATA[3]}]
+set_property -dict { PACKAGE_PIN W18   IOSTANDARD LVCMOS33 } [get_ports {OUT_DATA[4]}]
+set_property -dict { PACKAGE_PIN U15   IOSTANDARD LVCMOS33 } [get_ports {OUT_DATA[5]}]
+set_property -dict { PACKAGE_PIN U14   IOSTANDARD LVCMOS33 } [get_ports {OUT_DATA[6]}]
+# ... (5 LEDs no utilizados) ...
+set_property -dict { PACKAGE_PIN N3    IOSTANDARD LVCMOS33 } [get_ports negative]
+set_property -dict { PACKAGE_PIN P1    IOSTANDARD LVCMOS33 } [get_ports overflow]
+set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33 } [get_ports zero]
+
+## Buttons
+set_property -dict { PACKAGE_PIN U18   IOSTANDARD LVCMOS33 } [get_ports reset]
+set_property -dict { PACKAGE_PIN W19   IOSTANDARD LVCMOS33 } [get_ports select_a]
+set_property -dict { PACKAGE_PIN T17   IOSTANDARD LVCMOS33 } [get_ports select_b]
+set_property -dict { PACKAGE_PIN U17   IOSTANDARD LVCMOS33 } [get_ports select_op]
+```
+
+**Tabla de Asignacion de Pines:**
+
+<div align="center">
+
+| Señal | Pin/Pines (LSB-MSB)  | Descripcion |
+|-------|------------|-------------|
+| clk   | W5         | Señal de reloj principal (100MHz) |
+| IN_DATA[7:0] | V17, V16, W16, W17, W15, V15, W14, W13 | Switches para entrada de datos y operacion |
+| OUT_DATA[7:0] | U16, E19, U19, V19, W18, U15, U14 | LEDs para mostrar el resultado de la ALU |
+| zero  | L1         | LED que indica si el resultado es cero |
+| overflow | P1         | LED que indica si hay desbordamiento |
+| negative | N3         | LED que indica si el resultado es negativo |
+| reset | U18        | Boton para resetear los registros intermedios |
+| select_a | W19        | Boton para cargar el valor del switch al registro A |
+| select_b | T17        | Boton para cargar el valor del switch al registro B |
+| select_op | U17        | Boton para cargar el valor del switch al registro OP |
+
+</div>
 
 ### Testbenches
 
