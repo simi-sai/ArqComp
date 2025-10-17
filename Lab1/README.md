@@ -6,7 +6,7 @@
 - [X] La ALU debe ser parametrizable (bus de datos) para poder ser utilizada posteriormente en el trabajo final.
 - [ ] Validar el desarrollo por medio de Testbench.
   - [ ] El testbench debe incluir generacion de entradas aleatorias y codigo de checkeo automatico.
-- [ ] Simular el disenio usando herramientas de simulacion de VIVADO incluyendo Analisis de Tiempo.
+- [ ] Simular el diseño usando herramientas de simulacion de VIVADO incluyendo Analisis de Tiempo.
 
 ## Consignas
 

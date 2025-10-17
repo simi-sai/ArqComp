@@ -18,16 +18,13 @@ module ALU #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
     output reg zero, overflow, negative
 );
 
-    reg [DATA_WIDTH:0] aux_result; // Bit extra para detectar overflow
-
     always @(*) begin
         overflow = 0;
-
+        
         case (OP)
             `ADD: begin
-                aux_result = A + B;
-                result = aux_result[DATA_WIDTH-1:0];
-                overflow = aux_result[DATA_WIDTH];
+                result = A + B;
+                overflow = (A[DATA_WIDTH-1] == B[DATA_WIDTH-1]) && (result[DATA_WIDTH-1] != A[DATA_WIDTH-1]);
             end
             `SUB: result = A - B;
             `AND: result = A & B;
@@ -40,7 +37,7 @@ module ALU #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
         endcase
 
         zero = (result == 0);
-        negative = result[DATA_WIDTH-1] & (OP == `SUB | OP == `SRA);
+        negative = result[DATA_WIDTH-1] && (OP == `SUB | OP == `SRA);
     end
 
 endmodule
