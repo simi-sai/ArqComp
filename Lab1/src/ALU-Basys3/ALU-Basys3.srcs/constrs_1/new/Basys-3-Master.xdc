@@ -71,6 +71,17 @@ set_property -dict { PACKAGE_PIN T17   IOSTANDARD LVCMOS33 } [get_ports select_b
 set_property -dict { PACKAGE_PIN U17   IOSTANDARD LVCMOS33 } [get_ports select_op]
 
 
+## Timing Constraints
+set_false_path -from [get_ports reset]
+set_false_path -from [get_ports {select_a select_b select_op}]
+set_false_path -to [get_ports {zero negative overflow}]
+set_false_path -to [get_ports {OUT_DATA[*]}]
+
+## Multicycle paths para registros (2 ciclos)
+set_multicycle_path -setup 2 -from [get_pins reg_a*/C] [get_pins reg_b*/C] [get_pins reg_op*/C]
+set_multicycle_path -hold 1 -from [get_pins reg_a*/C] [get_pins reg_b*/C] [get_pins reg_op*/C]
+
+
 ## Pmod Header JA
 #set_property -dict { PACKAGE_PIN J1   IOSTANDARD LVCMOS33 } [get_ports {JA[0]}];#Sch name = JA1
 #set_property -dict { PACKAGE_PIN L2   IOSTANDARD LVCMOS33 } [get_ports {JA[1]}];#Sch name = JA2
@@ -149,11 +160,11 @@ set_property -dict { PACKAGE_PIN U17   IOSTANDARD LVCMOS33 } [get_ports select_o
 #set_property -dict { PACKAGE_PIN K19   IOSTANDARD LVCMOS33 } [get_ports QspiCSn]
 
 
-## Configuration options, can be used for all designs
-set_property CONFIG_VOLTAGE 3.3 [current_design]
-set_property CFGBVS VCCO [current_design]
-
-## SPI configuration mode options for QSPI boot, can be used for all designs
+## Configuration options, can be used for all designs        
+set_property CONFIG_VOLTAGE 3.3 [current_design]             
+set_property CFGBVS VCCO [current_design]                    for all designs
+                                                             
+## SPI configuration mode options for QSPI boot, can be used 
 set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
-set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]
-set_property CONFIG_MODE SPIx4 [current_design]
+set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design] 
+set_property CONFIG_MODE SPIx4 [current_design]              

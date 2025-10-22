@@ -22,11 +22,8 @@ module ALU #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
         overflow = 0;
         
         case (OP)
-            `ADD: begin
-                result = A + B;
-                overflow = (A[DATA_WIDTH-1] == B[DATA_WIDTH-1]) && (result[DATA_WIDTH-1] != A[DATA_WIDTH-1]);
-            end
-            `SUB: result = A - B;
+            `ADD: {overflow, result} = {1'b0, A} + {1'b0, B};
+            `SUB: {overflow, result} = {1'b0, A} - {1'b0, B};
             `AND: result = A & B;
             `OR:  result = A | B;
             `XOR: result = A ^ B;
@@ -35,9 +32,9 @@ module ALU #(parameter DATA_WIDTH = 8, parameter OP_WIDTH = 6) (
             `SRL: result = A >> B;
             default: result = {DATA_WIDTH{1'b0}};
         endcase
-
+      
         zero = (result == 0);
-        negative = result[DATA_WIDTH-1] && (OP == `SUB | OP == `SRA);
+        negative = result[DATA_WIDTH-1] && (OP == `ADD || OP == `SUB || OP == `SRA);
     end
 
 endmodule

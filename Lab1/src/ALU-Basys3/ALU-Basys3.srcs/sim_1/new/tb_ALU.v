@@ -11,7 +11,6 @@
 `define SRL 6'b000010
 
 module tb_ALU ();
-    // Parametros
     parameter DATA_WIDTH = 8;
     parameter OP_WIDTH = 6;
 
@@ -21,7 +20,7 @@ module tb_ALU ();
     wire [DATA_WIDTH-1:0] RESULT;
     wire ZERO, NEG, OVERFLOW;
 
-    ALU #(DATA_WIDTH, OP_WIDTH) uut (
+    ALU #(DATA_WIDTH, OP_WIDTH) uut_alu (
         .A(A), .B(B), .OP(OP),
         .result(RESULT),
         .zero(ZERO),
@@ -72,11 +71,8 @@ module tb_ALU ();
             #10;
 
             case(OP)
-                `ADD: begin
-                    expected_result = A + B;
-                    expected_overflow = (A[DATA_WIDTH-1] == B[DATA_WIDTH-1]) && (expected_result[DATA_WIDTH-1] != A[DATA_WIDTH-1]);
-                end
-                `SUB: expected_result = A - B;
+                `ADD: {expected_overflow, expected_result} = {1'b0, A} + {1'b0, B};
+                `SUB: {expected_overflow, expected_result} = {1'b0, A} - {1'b0, B};
                 `AND: expected_result = A & B;
                 `OR:  expected_result = A | B;
                 `XOR: expected_result = A ^ B;
@@ -87,7 +83,7 @@ module tb_ALU ();
             endcase
 
             expected_zero = (expected_result == 0);
-            expected_negative = expected_result[DATA_WIDTH-1] && (OP == `SUB || OP == `SRA);
+            expected_negative = expected_result[DATA_WIDTH-1] && (OP == `ADD || OP == `SUB || OP == `SRA);
             
             check_results;
         end
